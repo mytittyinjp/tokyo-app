@@ -31,7 +31,7 @@ const Map = () => {
             outSum: Number(row[6]),
           };
         });
-        const geojson = GeoJSON.parse(data, {
+        const geojson = (GeoJSON as any).parse(data, {
           Point: ["latitude", "longitude"],
           include: ["datetime", "in", "out"],
         });
