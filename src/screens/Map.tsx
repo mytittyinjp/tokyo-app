@@ -4,6 +4,7 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as d3 from "d3";
 import GeoJSON from "geojson";
 import { point, featureCollection } from "@turf/turf";
+import { addMinutes } from "date-fns";
 
 import TimeSlider from "../components/TimeSlider";
 import { sensorLatLon } from "../constants";
@@ -35,15 +36,21 @@ const Map = () => {
               sensorLatLon[Number(row[0]) - 1].latitude,
             ],
             {
+              id: Number(row[0]),
               dateTime: new Date(`${row[1]}T${row[2]}:00`),
               in: Number(row[3]),
               out: Number(row[4]),
               inSum: Number(row[5]),
               outSum: Number(row[6]),
+              total: Number(row[5]) + Number(row[6]),
             }
           );
         });
-        const newFeatures = filterFeatures(features, sliderValue);
+        const newFeatures = filterFeatures(
+          features,
+          sliderValue,
+          addMinutes(sliderValue, 9)
+        );
         setGeojson(features);
         setFilteredGeojson(featureCollection(newFeatures));
       })
@@ -53,14 +60,26 @@ const Map = () => {
   }, []);
 
   const sliderValuesChange = (values: number[]) => {
-    setSliderValue(new Date(values[0]));
-    const newFeatures = filterFeatures(geojson!, sliderValue);
+    const newDate = new Date(values[0]);
+    setSliderValue(newDate);
+    const newFeatures = filterFeatures(
+      geojson!,
+      sliderValue,
+      addMinutes(sliderValue, 9)
+    );
     setFilteredGeojson(featureCollection(newFeatures));
   };
 
-  const filterFeatures = (features: GeoJSON.Feature[], dateTime: Date) => {
+  const filterFeatures = (
+    features: GeoJSON.Feature[],
+    startDateTime: Date,
+    endDateTime: Date
+  ) => {
     const newFeatures = features!.filter((feature) => {
-      if (feature.properties!.dateTime.getTime() === dateTime.getTime()) {
+      const targetUnixTime = feature.properties!.dateTime.getTime();
+      const startUnixTime = startDateTime.getTime();
+      const endUnixTime = endDateTime.getTime();
+      if (startUnixTime <= targetUnixTime && targetUnixTime <= endUnixTime) {
         return true;
       }
     });
@@ -85,15 +104,23 @@ const Map = () => {
                 style={{
                   circleColor: [
                     "case",
-                    [">", ["get", "inSum"], 2000],
+                    [">", ["get", "total"], 1000],
+                    "#800026",
+                    [">", ["get", "total"], 700],
                     "#bd0026",
-                    [">", ["get", "inSum"], 1000],
-                    "#f03b20",
-                    [">", ["get", "inSum"], 500],
+                    [">", ["get", "total"], 500],
+                    "#e31a1c",
+                    [">", ["get", "total"], 400],
+                    "#fc4e2a",
+                    [">", ["get", "total"], 300],
                     "#fd8d3c",
-                    [">", ["get", "inSum"], 100],
-                    "#fecc5c",
-                    "#ffffb2",
+                    [">", ["get", "total"], 200],
+                    "#feb24c",
+                    [">", ["get", "total"], 100],
+                    "#fed976",
+                    [">", ["get", "total"], 50],
+                    "#ffeda0",
+                    "#ffffcc",
                   ],
                   circleStrokeWidth: 2,
                   circleStrokeColor: "#c9c9c9",
@@ -105,7 +132,7 @@ const Map = () => {
           )}
           <MapboxGL.Camera
             centerCoordinate={[133.0637379, 35.4639893]}
-            zoomLevel={17}
+            zoomLevel={16}
           />
         </MapboxGL.MapView>
       </View>

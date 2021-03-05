@@ -19,7 +19,7 @@ const TimeSlider: React.FC<Props> = (props) => {
       <Text>{dateTime.toString()}</Text>
       <MultiSlider
         values={[dateTime.getTime()]}
-        step={60000}
+        step={600000}
         min={new Date("2021-01-01T05:00:00").getTime()}
         max={new Date("2021-01-02T00:30:00").getTime()}
         onValuesChangeStart={sliderValuesChangeStart}
