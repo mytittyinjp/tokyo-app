@@ -21,7 +21,7 @@ const TimeSlider: React.FC<Props> = (props) => {
         values={[dateTime.getTime()]}
         step={600000}
         min={new Date("2021-01-01T05:00:00").getTime()}
-        max={new Date("2021-01-02T00:30:00").getTime()}
+        max={new Date("2021-01-02T00:29:00").getTime()}
         onValuesChangeStart={sliderValuesChangeStart}
         onValuesChange={handleChange}
         onValuesChangeFinish={sliderValuesChangeFinish}

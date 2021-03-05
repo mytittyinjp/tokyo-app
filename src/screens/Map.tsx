@@ -4,7 +4,7 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as d3 from "d3";
 import GeoJSON from "geojson";
 import { point, featureCollection } from "@turf/turf";
-import { addMinutes } from "date-fns";
+import { addMinutes, isValid } from "date-fns";
 
 import TimeSlider from "../components/TimeSlider";
 import { sensorLatLon } from "../constants";
@@ -30,6 +30,18 @@ const Map = () => {
     d3.text(DATA)
       .then((text: string) => {
         const features = d3.csvParseRows(text).map((row) => {
+          let dateTime = new Date(`${row[1]}T${row[2]}:00`);
+          if (!isValid(dateTime)) {
+            const date = row[1].split("-");
+            const time = row[2].split(":");
+            dateTime = new Date(
+              Number(date[0]),
+              Number(date[1]) - 1,
+              Number(date[2]),
+              Number(time[0]),
+              Number(time[1])
+            );
+          }
           return point(
             [
               sensorLatLon[Number(row[0]) - 1].longitude,
@@ -37,7 +49,7 @@ const Map = () => {
             ],
             {
               id: Number(row[0]),
-              dateTime: new Date(`${row[1]}T${row[2]}:00`),
+              dateTime: dateTime,
               in: Number(row[3]),
               out: Number(row[4]),
               inSum: Number(row[5]),
