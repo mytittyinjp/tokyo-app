@@ -147,9 +147,12 @@ const Map = () => {
             zoomLevel={16}
           />
         </MapboxGL.MapView>
-      </View>
-      <View style={styles.slider}>
-        <TimeSlider dateTime={sliderValue} handleChange={sliderValuesChange} />
+        <View style={styles.slider}>
+          <TimeSlider
+            dateTime={sliderValue}
+            handleChange={sliderValuesChange}
+          />
+        </View>
       </View>
     </View>
   );
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    height: "80%",
+    height: "100%",
     width: "100%",
   },
   map: {
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
   slider: {
     position: "absolute",
     bottom: 10,
-    height: "20%",
+    height: "15%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",

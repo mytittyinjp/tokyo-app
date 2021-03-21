@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import { format } from "date-fns";
 
 type Props = {
   dateTime: Date;
@@ -15,21 +16,51 @@ const TimeSlider: React.FC<Props> = (props) => {
   const sliderValuesChangeFinish = () => setSliderChanging(false);
 
   return (
-    <View>
-      <Text>{dateTime.toString()}</Text>
-      <MultiSlider
-        values={[dateTime.getTime()]}
-        step={600000}
-        min={new Date("2021-01-01T05:00:00").getTime()}
-        max={new Date("2021-01-02T00:29:00").getTime()}
-        onValuesChangeStart={sliderValuesChangeStart}
-        onValuesChange={handleChange}
-        onValuesChangeFinish={sliderValuesChangeFinish}
-      />
+    <View style={styles.container}>
+      <View style={styles.dateTime}>
+        <Text style={styles.text}>{format(dateTime, "yyyy-MM-dd hh:mm")}</Text>
+      </View>
+      <View style={styles.multiSlider}>
+        <MultiSlider
+          values={[dateTime.getTime()]}
+          step={600000}
+          min={new Date("2021-01-01T05:00:00").getTime()}
+          max={new Date("2021-01-02T00:29:00").getTime()}
+          onValuesChangeStart={sliderValuesChangeStart}
+          onValuesChange={handleChange}
+          onValuesChangeFinish={sliderValuesChangeFinish}
+        />
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dateTime: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0378C4",
+    borderRadius: 5,
+    marginBottom: 10,
+    height: 50,
+    width: "60%",
+  },
+  text: {
+    fontSize: 18,
+    color: "#FFF",
+  },
+  multiSlider: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#0378C4",
+    borderRadius: 5,
+    width: "100%",
+  },
+});
 
 export default TimeSlider;
