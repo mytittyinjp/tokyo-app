@@ -18,7 +18,7 @@ const TimeSlider: React.FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.dateTime}>
-        <Text style={styles.text}>{format(dateTime, "yyyy-MM-dd hh:mm")}</Text>
+        <Text style={styles.text}>{format(dateTime, "yyyy-MM-dd H:mm")}</Text>
       </View>
       <View style={styles.multiSlider}>
         <MultiSlider
