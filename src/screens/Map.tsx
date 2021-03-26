@@ -3,12 +3,12 @@ import { StyleSheet, View } from "react-native";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import * as d3 from "d3";
 import GeoJSON from "geojson";
-import { point, featureCollection } from "@turf/turf";
+import { polygon, featureCollection } from "@turf/turf";
 import { addMinutes, isValid } from "date-fns";
 
 import TimeSlider from "../components/TimeSlider";
 import { sensorLatLon } from "../constants";
-import { circleLayerStyles } from "../layers/CircleLayerProps";
+import { fillExtrusionLayerStyles } from "../layers/styles";
 
 const MAPBOX_ACCESS_TOKEN =
   "pk.eyJ1IjoibmFuZGVtbyIsImEiOiJja2R5Z21qZ2swMjRtMnlueWo1cm9zbGl0In0.pQdWOAinK4tNCUCr7U4oKQ";
@@ -43,21 +43,20 @@ const Map = () => {
               Number(time[1])
             );
           }
-          return point(
-            [
-              sensorLatLon[Number(row[0]) - 1].longitude,
-              sensorLatLon[Number(row[0]) - 1].latitude,
-            ],
-            {
-              id: Number(row[0]),
-              dateTime: dateTime,
-              in: Number(row[3]),
-              out: Number(row[4]),
-              inSum: Number(row[5]),
-              outSum: Number(row[6]),
-              total: Number(row[5]) + Number(row[6]),
+          const heBoundary = sensorLatLon[Number(row[0]) - 1].hexBoundary.map(
+            (c) => {
+              return [c[1], c[0]];
             }
           );
+          return polygon([heBoundary], {
+            id: Number(row[0]),
+            dateTime: dateTime,
+            in: Number(row[3]),
+            out: Number(row[4]),
+            inSum: Number(row[5]),
+            outSum: Number(row[6]),
+            total: Number(row[5]) + Number(row[6]),
+          });
         });
         const newFeatures = filterFeatures(
           features,
@@ -112,9 +111,9 @@ const Map = () => {
               id="exampleShapeSource"
               shape={filteredGeojson}
             >
-              <MapboxGL.Animated.CircleLayer
-                id="singlePoint"
-                style={circleLayerStyles}
+              <MapboxGL.Animated.FillExtrusionLayer
+                id="hexagonLayer"
+                style={fillExtrusionLayerStyles}
               />
             </MapboxGL.Animated.ShapeSource>
           ) : (
@@ -123,6 +122,7 @@ const Map = () => {
           <MapboxGL.Camera
             centerCoordinate={[133.0637379, 35.4639893]}
             zoomLevel={16}
+            pitch={24}
           />
         </MapboxGL.MapView>
         <View style={styles.slider}>
