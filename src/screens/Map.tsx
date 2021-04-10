@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import MapboxGL, { CameraProps } from "@react-native-mapbox-gl/maps";
 import * as d3 from "d3";
 import GeoJSON from "geojson";
 import { polygon, featureCollection } from "@turf/turf";
@@ -17,7 +17,18 @@ const DATA =
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
+const initialCameraState: CameraProps = {
+  centerCoordinate: [133.0637379, 35.4639893],
+  zoomLevel: 16,
+  pitch: 24,
+  animationMode: "moveTo",
+};
+
 const Map = () => {
+  const [cameraState, setCameraState] = useState<CameraProps>(
+    initialCameraState
+  );
+
   const [geojson, setGeojson] = useState<GeoJSON.Feature[]>();
   const [
     filteredGeojson,
@@ -43,12 +54,12 @@ const Map = () => {
               Number(time[1])
             );
           }
-          const heBoundary = sensorLatLon[Number(row[0]) - 1].hexBoundary.map(
+          const hexBoundary = sensorLatLon[Number(row[0]) - 1].hexBoundary.map(
             (c) => {
               return [c[1], c[0]];
             }
           );
-          return polygon([heBoundary], {
+          return polygon([hexBoundary], {
             id: Number(row[0]),
             dateTime: dateTime,
             in: Number(row[3]),
@@ -98,6 +109,18 @@ const Map = () => {
     return newFeatures;
   };
 
+  const handlePress = (event: any) => {
+    setCameraState({
+      ...cameraState,
+      centerCoordinate: [
+        event.coordinates.longitude,
+        event.coordinates.latitude,
+      ],
+      zoomLevel: 17,
+      animationMode: "flyTo",
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.container}>
@@ -108,8 +131,9 @@ const Map = () => {
         >
           {filteredGeojson ? (
             <MapboxGL.Animated.ShapeSource
-              id="exampleShapeSource"
+              id="shapeSource"
               shape={filteredGeojson}
+              onPress={handlePress}
             >
               <MapboxGL.Animated.FillExtrusionLayer
                 id="hexagonLayer"
@@ -119,11 +143,7 @@ const Map = () => {
           ) : (
             <View></View>
           )}
-          <MapboxGL.Camera
-            centerCoordinate={[133.0637379, 35.4639893]}
-            zoomLevel={16}
-            pitch={24}
-          />
+          <MapboxGL.Camera {...cameraState} />
         </MapboxGL.MapView>
         <View style={styles.slider}>
           <TimeSlider
