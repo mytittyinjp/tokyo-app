@@ -3,7 +3,8 @@ import { StyleSheet, View } from "react-native";
 import MapboxGL, { CameraProps } from "@react-native-mapbox-gl/maps";
 import * as d3 from "d3";
 import GeoJSON from "geojson";
-import { polygon, featureCollection } from "@turf/turf";
+import { featureCollection } from "@turf/turf";
+import circle from "@turf/circle";
 import { addMinutes, isValid } from "date-fns";
 
 import TimeSlider from "../components/TimeSlider";
@@ -18,8 +19,8 @@ const DATA =
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
 const initialCameraState: CameraProps = {
-  centerCoordinate: [133.0637379, 35.4639893],
-  zoomLevel: 16,
+  centerCoordinate: [sensorLatLon[10].longitude, sensorLatLon[10].latitude],
+  zoomLevel: 19,
   pitch: 24,
   animationMode: "moveTo",
 };
@@ -54,20 +55,26 @@ const Map = () => {
               Number(time[1])
             );
           }
-          const hexBoundary = sensorLatLon[Number(row[0]) - 1].hexBoundary.map(
-            (c) => {
-              return [c[1], c[0]];
-            }
-          );
-          return polygon([hexBoundary], {
-            id: Number(row[0]),
-            dateTime: dateTime,
-            in: Number(row[3]),
-            out: Number(row[4]),
-            inSum: Number(row[5]),
-            outSum: Number(row[6]),
-            total: Number(row[5]) + Number(row[6]),
-          });
+
+          const center = [
+            sensorLatLon[Number(row[0]) - 1].longitude,
+            sensorLatLon[Number(row[0]) - 1].latitude,
+          ];
+          const radius = 0.0025; //2.5m
+          const options: any = {
+            steps: 10,
+            units: "kilometers",
+            properties: {
+              id: Number(row[0]),
+              dateTime: dateTime,
+              in: Number(row[3]),
+              out: Number(row[4]),
+              inSum: Number(row[5]),
+              outSum: Number(row[6]),
+              total: Number(row[5]) + Number(row[6]),
+            },
+          };
+          return circle(center, radius, options);
         });
         const newFeatures = filterFeatures(
           features,
@@ -116,7 +123,6 @@ const Map = () => {
         event.coordinates.longitude,
         event.coordinates.latitude,
       ],
-      zoomLevel: 17,
       animationMode: "flyTo",
     });
   };
