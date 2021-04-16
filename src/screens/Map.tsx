@@ -8,6 +8,7 @@ import circle from "@turf/circle";
 import { addMinutes, isValid } from "date-fns";
 
 import TimeSlider from "../components/TimeSlider";
+import Graphs from "../components/Graphs";
 import { sensorLatLon } from "../constants";
 import { fillExtrusionLayerStyles } from "../layers/styles";
 
@@ -151,6 +152,9 @@ const Map = () => {
           )}
           <MapboxGL.Camera {...cameraState} />
         </MapboxGL.MapView>
+        <View style={styles.graph}>
+          <Graphs id={9} />
+        </View>
         <View style={styles.slider}>
           <TimeSlider
             dateTime={sliderValue}
@@ -177,6 +181,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     height: "15%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  graph: {
+    position: "absolute",
+    bottom: 150,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
