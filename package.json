@@ -14,6 +14,7 @@
     "@turf/turf": "^6.3.0",
     "@types/d3": "^6.3.0",
     "@types/geojson": "^7946.0.7",
+    "@types/rn-swipeable-panel": "^1.2.1",
     "@types/victory": "^33.1.4",
     "d3": "^6.5.0",
     "date-fns": "^2.18.0",
@@ -30,6 +31,7 @@
     "react-native-svg": "^12.1.1-0",
     "react-native-unimodules": "~0.12.0",
     "react-native-web": "~0.13.12",
+    "rn-swipeable-panel": "^1.2.5",
     "victory-native": "^35.3.2"
   },
   "devDependencies": {

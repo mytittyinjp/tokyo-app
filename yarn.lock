@@ -3432,6 +3432,13 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
+"@types/rn-swipeable-panel@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/rn-swipeable-panel/-/rn-swipeable-panel-1.2.1.tgz#8ba101836d57492a26a6bffe78d15188d32dc16d"
+  integrity sha512-Ps98M3FQzaeYrBBUQ738fYoe1/DWy309r54UsG6Z5J9OZyLt4DACrBRW9ZclWQBhW+Cx+XPPT5pTTK0BieVapQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -9128,6 +9135,13 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
+
+rn-swipeable-panel@^1.2.3, rn-swipeable-panel@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/rn-swipeable-panel/-/rn-swipeable-panel-1.2.5.tgz#a531046a27e21e67b0afae987f9b90e911b20b99"
+  integrity sha512-abgBI8lbvlU4M5MKQrx/1sFR7yKJjvC1M377xaDCq7S1ZDGkVF/wghRwq4aA+w8ehYKtY6q3dfuZucz9uIGhYg==
+  dependencies:
+    rn-swipeable-panel "^1.2.3"
 
 robust-predicates@^2.0.4:
   version "2.0.4"
