@@ -13,6 +13,7 @@ const SwipePanel = () => {
     onlySmall: true,
     showCloseButton: true,
     noBackgroundOpacity: true,
+    allowTouchOutside: true,
     onClose: () => closePanel(),
     onPressCloseButton: () => closePanel(),
     // ...or any prop you want

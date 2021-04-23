@@ -58,7 +58,7 @@ const Graphs: React.FC<Props> = (props) => {
     const inSum = getBarData("inSum", id);
     const outSum = getBarData("outSum", id);
     setGraphData({ inSum: inSum, outSum: outSum });
-  }, [graphOriginData]);
+  }, [id, graphOriginData]);
 
   const getBarData = (type: string, id: number): object[] => {
     return graphOriginData
