@@ -10,6 +10,8 @@ import { addMinutes, isValid } from "date-fns";
 import TimeSlider from "../components/TimeSlider";
 import { sensorLatLon } from "../constants";
 import { fillExtrusionLayerStyles } from "../layers/styles";
+import { Sensor } from "../container/Sensor";
+import { Slider } from "../container/Slider";
 
 const MAPBOX_ACCESS_TOKEN =
   "pk.eyJ1IjoibmFuZGVtbyIsImEiOiJja2R5Z21qZ2swMjRtMnlueWo1cm9zbGl0In0.pQdWOAinK4tNCUCr7U4oKQ";
@@ -19,25 +21,24 @@ const DATA =
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
 const initialCameraState: CameraProps = {
-  centerCoordinate: [sensorLatLon[10].longitude, sensorLatLon[10].latitude],
   zoomLevel: 19,
   pitch: 24,
   animationMode: "moveTo",
 };
 
 const Map = () => {
-  const [cameraState, setCameraState] = useState<CameraProps>(
-    initialCameraState
-  );
+  const sensor = Sensor.useContainer();
+  const slider = Slider.useContainer();
 
+  const [cameraState, setCameraState] = useState<CameraProps>({
+    ...initialCameraState,
+    centerCoordinate: [sensor.data.longitude, sensor.data.latitude],
+  });
   const [geojson, setGeojson] = useState<GeoJSON.Feature[]>();
   const [
     filteredGeojson,
     setFilteredGeojson,
   ] = useState<GeoJSON.FeatureCollection>();
-  const [sliderValue, setSliderValue] = React.useState(
-    new Date("2021-01-01T05:00:00")
-  );
 
   useEffect(() => {
     d3.text(DATA)
@@ -78,8 +79,8 @@ const Map = () => {
         });
         const newFeatures = filterFeatures(
           features,
-          sliderValue,
-          addMinutes(sliderValue, 9)
+          slider.value,
+          addMinutes(slider.value, 9)
         );
         setGeojson(features);
         setFilteredGeojson(featureCollection(newFeatures));
@@ -89,16 +90,16 @@ const Map = () => {
       });
   }, []);
 
-  const sliderValuesChange = (values: number[]) => {
-    const newDate = new Date(values[0]);
-    setSliderValue(newDate);
-    const newFeatures = filterFeatures(
-      geojson!,
-      sliderValue,
-      addMinutes(sliderValue, 9)
-    );
-    setFilteredGeojson(featureCollection(newFeatures));
-  };
+  useEffect(() => {
+    if (geojson) {
+      const newFeatures = filterFeatures(
+        geojson,
+        slider.value,
+        addMinutes(slider.value, 9)
+      );
+      setFilteredGeojson(featureCollection(newFeatures));
+    }
+  }, [slider]);
 
   const filterFeatures = (
     features: GeoJSON.Feature[],
@@ -117,6 +118,8 @@ const Map = () => {
   };
 
   const handlePress = (event: any) => {
+    const newId = event.features[0].properties.id;
+    sensor.onChange(newId);
     setCameraState({
       ...cameraState,
       centerCoordinate: [
@@ -153,10 +156,7 @@ const Map = () => {
         </MapboxGL.MapView>
 
         <View style={styles.slider}>
-          <TimeSlider
-            dateTime={sliderValue}
-            handleChange={sliderValuesChange}
-          />
+          <TimeSlider dateTime={slider.value} handleChange={slider.onChange} />
         </View>
       </View>
     </View>

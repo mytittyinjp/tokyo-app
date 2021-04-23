@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 type Props = {
   dateTime: Date;
-  handleChange: (values: number[]) => void;
+  handleChange: (newDate: Date) => void;
 };
 
 const TimeSlider: React.FC<Props> = (props) => {
@@ -14,6 +14,11 @@ const TimeSlider: React.FC<Props> = (props) => {
 
   const sliderValuesChangeStart = () => setSliderChanging(true);
   const sliderValuesChangeFinish = () => setSliderChanging(false);
+
+  const sliderValuesChange = (values: number[]) => {
+    const newDate = new Date(values[0]);
+    handleChange(newDate);
+  };
 
   return (
     <View style={styles.container}>
@@ -27,7 +32,7 @@ const TimeSlider: React.FC<Props> = (props) => {
           min={new Date("2021-01-01T05:00:00").getTime()}
           max={new Date("2021-01-02T00:29:00").getTime()}
           onValuesChangeStart={sliderValuesChangeStart}
-          onValuesChange={handleChange}
+          onValuesChange={sliderValuesChange}
           onValuesChangeFinish={sliderValuesChangeFinish}
         />
       </View>
