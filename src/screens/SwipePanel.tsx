@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { SwipeablePanel } from "rn-swipeable-panel";
 import Graphs from "../components/Graphs";
 
+import { Sensor } from "../container/Sensor";
+
 const SwipePanel = () => {
+  const sensor = Sensor.useContainer();
+
   const [panelProps, setPanelProps] = useState({
     fullWidth: true,
     onlySmall: true,
@@ -15,6 +19,12 @@ const SwipePanel = () => {
   });
   const [isPanelActive, setIsPanelActive] = useState(true);
 
+  useEffect(() => {
+    if (!isPanelActive) {
+      setIsPanelActive(true);
+    }
+  }, [sensor]);
+
   const openPanel = () => {
     setIsPanelActive(true);
   };
@@ -23,9 +33,15 @@ const SwipePanel = () => {
     setIsPanelActive(false);
   };
 
+  useEffect(() => {
+    if (!isPanelActive) {
+      setIsPanelActive(true);
+    }
+  }, [sensor]);
+
   return (
     <SwipeablePanel {...panelProps} isActive={isPanelActive}>
-      <Graphs id={9} />
+      <Graphs id={sensor.data.id} />
     </SwipeablePanel>
   );
 };
