@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { SwipeablePanel } from "rn-swipeable-panel";
-import Graphs from "../components/Graphs";
+import Graphs from "./Graphs";
 
 import { Sensor } from "../container/Sensor";
 
