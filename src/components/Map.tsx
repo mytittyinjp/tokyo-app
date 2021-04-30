@@ -7,7 +7,7 @@ import { featureCollection } from "@turf/turf";
 import circle from "@turf/circle";
 import { addMinutes, isValid } from "date-fns";
 
-import TimeSlider from "../components/TimeSlider";
+import TimeSlider from "./TimeSlider";
 import { sensorLatLon } from "../constants";
 import { fillExtrusionLayerStyles } from "../layers/styles";
 import { Sensor } from "../container/Sensor";
@@ -131,42 +131,37 @@ const Map = () => {
   };
 
   return (
-    <View style={styles.page}>
-      <View style={styles.container}>
-        <MapboxGL.MapView
-          style={styles.map}
-          styleURL={MapboxGL.StyleURL.Street}
-          logoEnabled={false}
-        >
-          {filteredGeojson ? (
-            <MapboxGL.Animated.ShapeSource
-              id="shapeSource"
-              shape={filteredGeojson}
-              onPress={handlePress}
-            >
-              <MapboxGL.Animated.FillExtrusionLayer
-                id="hexagonLayer"
-                style={fillExtrusionLayerStyles}
-              />
-            </MapboxGL.Animated.ShapeSource>
-          ) : (
-            <View></View>
-          )}
-          <MapboxGL.Camera {...cameraState} />
-        </MapboxGL.MapView>
+    <View style={styles.container}>
+      <MapboxGL.MapView
+        style={styles.map}
+        styleURL={MapboxGL.StyleURL.Street}
+        logoEnabled={false}
+      >
+        {filteredGeojson ? (
+          <MapboxGL.Animated.ShapeSource
+            id="shapeSource"
+            shape={filteredGeojson}
+            onPress={handlePress}
+          >
+            <MapboxGL.Animated.FillExtrusionLayer
+              id="hexagonLayer"
+              style={fillExtrusionLayerStyles}
+            />
+          </MapboxGL.Animated.ShapeSource>
+        ) : (
+          <View></View>
+        )}
+        <MapboxGL.Camera {...cameraState} />
+      </MapboxGL.MapView>
 
-        <View style={styles.slider}>
-          <TimeSlider dateTime={slider.value} handleChange={slider.onChange} />
-        </View>
+      <View style={styles.slider}>
+        <TimeSlider dateTime={slider.value} handleChange={slider.onChange} />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-  },
   container: {
     height: "100%",
     width: "100%",

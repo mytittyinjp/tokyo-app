@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
 import { SwipeablePanel } from "rn-swipeable-panel";
 import Graphs from "./Graphs";
 
@@ -11,12 +10,10 @@ const SwipePanel = () => {
   const [panelProps, setPanelProps] = useState({
     fullWidth: true,
     onlySmall: true,
-    showCloseButton: true,
+    showCloseButton: false,
     noBackgroundOpacity: true,
     allowTouchOutside: true,
     onClose: () => closePanel(),
-    onPressCloseButton: () => closePanel(),
-    // ...or any prop you want
   });
   const [isPanelActive, setIsPanelActive] = useState(true);
 
@@ -46,16 +43,5 @@ const SwipePanel = () => {
     </SwipeablePanel>
   );
 };
-
-const styles = StyleSheet.create({
-  graph: {
-    position: "absolute",
-    bottom: 150,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-});
 
 export default SwipePanel;
